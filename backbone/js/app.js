@@ -15,6 +15,12 @@ var task = new Task();
 
 var TaskView = Backbone.View.extend({
   tagName: 'li',
+  events: {
+    "click .command": "sayHello"
+  },
+  sayHello: function(){
+    alert('hallo!');
+  },
   //className: 'liClass',
   //id: 'liid'
   template: _.template( $('#task-template').html()),
@@ -25,8 +31,8 @@ var TaskView = Backbone.View.extend({
   }
 });
 var taskView = new TaskView({model : task});
-console.log(taskView.render().el)
-$(body).append(taskView.render().el);
+console.log(taskView.render().el);
+$('body').append(taskView.render().el);
 // console.log(taskView.$el)
 //$でjqueryのメソッドになる
 })();
