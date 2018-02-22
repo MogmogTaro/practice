@@ -3,6 +3,12 @@
   <head>
     <meta charset="utf-8">
     <title>backboneの練習</title>
+    <style>
+      .completed {
+        text-decoration: line-through;
+        color: gray;
+      }
+    </style>
   </head>
   <body>
 
@@ -13,8 +19,11 @@
 
     <script type="text/template" id="task-template">
       <input type="checkbox" class="toggle" <%= completed ? 'checked' : "" %>>
-      <%- title %>
-      <span class="delete">[x]</span>
+        <span class="<%= completed ? 'completed' : '' %>">
+          <%- title %>
+        </span>
+
+        <span class="delete">[x]</span>
     </script>
 
     <script src="js/underscore.js"></script>
