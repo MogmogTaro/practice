@@ -4,6 +4,16 @@ var Task = Backbone.Model.extend({
   defaults: {
     title: 'do something!',
     completed: false
+  },
+  validate: function(attrs) {
+    if ( _.isEmpty(attrs.title)) {
+      return 'title must not be empty';
+    }
+  },
+  initialize: function() {
+    this.on('invalid' , function(model, error) {
+      $('#error').html(error);
+    });
   }
 });
 var Tasks = Backbone.Collection.extend({model:Task});
@@ -61,8 +71,12 @@ var AddTaskView = Backbone.View.extend({
   },
   submit: function(e) {
     e.preventDrfault();
-    var task = new Task({title: $('#title').val()});
-    this.collection.add(task);
+    // var task = new Task({title: $('#title').val()});
+    var task = new Task();
+    if(task.set()) {
+      var task = new Task({title: $('#title').val()}, {valdate:true});
+      this.collection.add(task);
+    }
   }
 });
 
