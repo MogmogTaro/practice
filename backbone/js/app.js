@@ -50,10 +50,14 @@ var TasksView = Backbone.View.extend({
   tagName: 'ul',
   initialize: function() {
     this.collection.on('add', this.addNew , this);
+    this.collection.on('change', this.updateCount , this);
+    this.collection.on('destroy', this.updateCount , this);
   },
   addNew: function(task) {
     var taskView = new TaskView({model: task});
     this.$el.append(taskView.render().el);
+    $('#title').cal('').focus();
+    this.updateCount();
   },
   updateCount: function(){
     var uncompletedTasks = this.collection.filter(function(task) {
@@ -83,6 +87,7 @@ var AddTaskView = Backbone.View.extend({
     if(task.set()) {
       var task = new Task({title: $('#title').val()}, {valdate:true});
       this.collection.add(task);
+      $('#error').empty();
     }
   }
 });
