@@ -3,7 +3,7 @@ $(function(){
     defaults: function() {
       return {
         title: "",
-        order: Todos.nextOrder(),
+        order: Todos.order(),
         done: false
       };
     },
@@ -17,7 +17,7 @@ $(function(){
     remaining: function() {
       return this.where({done: false});
     },
-    nextOrder: function() {
+    order: function() {
       if (!this.length) return 1;
       return this.last().get('order') + 1;
     },
@@ -28,12 +28,35 @@ $(function(){
   var TodoView = Backbone.View.extend({
     tagName:  "li",
     template: _.template($('#item-template').html()),
+
+    events: {
+      "click a.destroy": "delete",
+      "dblclick .view": "edit",
+      "keypress .edit": "close"
+    },
+
     initialize: function() {
+      this.listenTo(this.model, 'change', this.render);
       this.listenTo(this.model, 'destroy', this.remove);
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
+      this.input = this.$('.edit');
       return this;
+    },
+    delete: function() {
+      this.model.destroy();
+    },
+    edit: function() {
+      this.$el.addClass("editing");
+      this.input.focus();
+    },
+    close: function(e) {
+      if (e.keyCode == 13) {
+        this.$el.removeClass("editing");
+        return;
+      }
+      this.input.focus();
     }
   });
 
