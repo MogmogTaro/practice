@@ -7,10 +7,14 @@ $(function(){
         done: false
       };
     },
+    toggle: function() {
+      this.save({done: !this.get('done')});
+    }
   });
 
   var TodoList = Backbone.Collection.extend({
     model: Todo,
+    localStorage: new Backbone.LocalStorage("todos-backbone"),
     done: function() {
       return this.where({done: true});
     },
@@ -24,6 +28,7 @@ $(function(){
     comparator: 'order'
 
   });
+
   var Todos = new TodoList;
   var TodoView = Backbone.View.extend({
     tagName:  "li",
@@ -32,7 +37,9 @@ $(function(){
     events: {
       "click a.destroy": "delete",
       "dblclick .view": "edit",
-      "keypress .edit": "close"
+      "keypress .edit": "close",
+      "blur .edit": "overwrite",
+      "click .toggle": "doneToggle"
     },
 
     initialize: function() {
@@ -42,6 +49,7 @@ $(function(){
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.input = this.$('.edit');
+      this.$el.toggleClass('done', this.model.get('done'));
       return this;
     },
     delete: function() {
@@ -57,6 +65,17 @@ $(function(){
         return;
       }
       this.input.focus();
+    },
+    overwrite: function() {
+      var title = this.input.val();
+      if(!title) {
+        this.delete();
+      } else {
+        this.model.save({title: title});
+      }
+    },
+    doneToggle: function() {
+      this.model.toggle();
     }
   });
 
