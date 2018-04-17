@@ -69,7 +69,7 @@ $(function(){
     overwrite: function() {
       var title = this.input.val();
       if(!title) {
-        this.delete();
+        this.input.val();
       } else {
         this.model.save({title: title});
       }
@@ -87,6 +87,7 @@ $(function(){
 
     events: {
       "keypress #new-todo":  "createOnEnter",
+      "click #clear-completed": "allDelete",
       "click #toggle-all": "allCheck"
     },
     initialize: function() {
@@ -113,7 +114,7 @@ $(function(){
         this.main.hide();
         this.footer.hide();
       }
-      this.allCheckbox.checked = !remaining;
+      this.allCheckBox.checked = !remaining;
     },
     addOne: function(todo) {
       var view = new TodoView({model: todo});
@@ -129,10 +130,12 @@ $(function(){
       Todos.create({title: this.input.val()});
       this.input.val('');
     },
+    allDelete: function(){
+      _.invoke(Todos.done(), 'destroy');
+    },
     allCheck: function() {
-      var check = this.allCheckbox.checked;
-
-      Todos.each(function (todo) {todo.save({'done': checl}); });
+      var done = this.allCheckBox.checked;
+      Todos.each(function (todo) {todo.save({'done': done}); });
     }
   });
   var App = new AppView;
