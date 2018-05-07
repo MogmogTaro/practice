@@ -65,11 +65,14 @@ $(function(){
     },
     overwrite: function() {
       var value = this.input.val();
-      var clone = this.input.clone('name');
-      if(value == '') {
-        this.model.save({title: clone});
+      var name = this.model.get('name');
+      if(!value) {
+        return name;
       } else {
-        this.model.save({title: value});
+        this.model.save({
+          title: value,
+          name: value
+        });
       }
       // changeしたときにとか、フォーカスが外れたときvalueがからだったら、nameを当てはめる
       // でもこのイベントはblurがついてる
