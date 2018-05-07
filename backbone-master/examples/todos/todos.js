@@ -2,9 +2,10 @@ $(function(){
   var Todo = Backbone.Model.extend({
     defaults: function() {
       return {
-        title: "",
-        order: Todos.order(),
-        done: false
+        title: '',
+        // order: Todos.order(),
+        done: false,
+        name: ''
       };
     },
     toggle: function() {
@@ -20,13 +21,7 @@ $(function(){
     },
     remaining: function() {
       return this.where({done: false});
-    },
-    order: function() {
-      if (!this.length) return 1;
-      return this.last().get('order') + 1;
-    },
-    comparator: 'order'
-
+    }
   });
 
   var Todos = new TodoList;
@@ -40,6 +35,7 @@ $(function(){
       "keypress .edit": "close",
       "blur .edit": "overwrite",
       "click .toggle": "doneToggle"
+      // エンターを押して編集モードを終了するときに、上書きなどの処理も一緒にする
     },
 
     initialize: function() {
@@ -55,6 +51,7 @@ $(function(){
     delete: function() {
       this.model.destroy();
     },
+    // エンターを押して編集モードを終了するときに、上書きなどの処理も一緒にする
     edit: function() {
       this.$el.addClass("editing");
       this.input.focus();
@@ -67,12 +64,15 @@ $(function(){
       this.input.focus();
     },
     overwrite: function() {
-      var title = this.input.val();
-      if(!title) {
-        this.input.val();
+      var value = this.input.val();
+      var clone = this.input.clone('name');
+      if(value == '') {
+        this.model.save({title: clone});
       } else {
-        this.model.save({title: title});
+        this.model.save({title: value});
       }
+      // changeしたときにとか、フォーカスが外れたときvalueがからだったら、nameを当てはめる
+      // でもこのイベントはblurがついてる
     },
     doneToggle: function() {
       this.model.toggle();
@@ -127,8 +127,15 @@ $(function(){
       if (e.keyCode != 13) return;
       if (!this.input.val()) return;
 
-      Todos.create({title: this.input.val()});
+      Todos.create({
+        title: this.input.val(),
+        name: this.input.val()
+      });
       this.input.val('');
+    },
+    comparator: 'name',
+    comparator: function(todo) {
+      return todo.get('name');
     },
     allDelete: function(){
       _.invoke(Todos.done(), 'destroy');

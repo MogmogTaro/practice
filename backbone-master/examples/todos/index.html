@@ -13,7 +13,7 @@
 
     <header>
       <h1>Todos</h1>
-      <input id="new-todo" type="text" placeholder="What needs to be done?">
+      <input id="new-todo" type="text" placeholder="What needs to be done?" name="title">
     </header>
 
     <section id="main">
@@ -51,11 +51,11 @@
 
   <script type="text/template" id="item-template">
     <div class="view">
-      <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+      <input class="toggle" type="checkbox"<%= done ? 'checked="checked"' : '' %> />
       <label><%- title %></label>
       <a class="destroy"></a>
     </div>
-    <input class="edit" type="text" value="<%- title %>" />
+    <input class="edit" type="text" name="<%- name %>"  value="<%- title %>" />
   </script>
 
   <script type="text/template" id="stats-template">
