@@ -67,7 +67,8 @@ $(function(){
       var value = this.input.val();
       var name = this.model.get('name');
       if(!value) {
-        return name;
+        value = name;
+        location.reload();
       } else {
         this.model.save({
           title: value,
@@ -132,7 +133,8 @@ $(function(){
 
       Todos.create({
         title: this.input.val(),
-        name: this.input.val()
+        name: this.input.val(),
+        id: this.input.val()
       });
       this.input.val('');
     },
