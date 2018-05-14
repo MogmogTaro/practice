@@ -133,8 +133,7 @@ $(function(){
 
       Todos.create({
         title: this.input.val(),
-        name: this.input.val(),
-        id: this.input.val()
+        name: this.input.val()
       });
       this.input.val('');
     },
