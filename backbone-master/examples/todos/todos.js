@@ -51,7 +51,6 @@ $(function(){
     delete: function() {
       this.model.destroy();
     },
-    // エンターを押して編集モードを終了するときに、上書きなどの処理も一緒にする
     edit: function() {
       this.$el.addClass("editing");
       this.input.focus();
@@ -66,17 +65,23 @@ $(function(){
     overwrite: function() {
       var value = this.input.val();
       var name = this.model.get('name');
+      
       if(!value) {
-        value = name;
-        location.reload();
+        var self = this.model;
+        self.save({
+          title: ""
+        });
+        setTimeout(function(){
+          self.save({
+            title: name
+          });
+        },1);
       } else {
         this.model.save({
           title: value,
           name: value
         });
       }
-      // changeしたときにとか、フォーカスが外れたときvalueがからだったら、nameを当てはめる
-      // でもこのイベントはblurがついてる
     },
     doneToggle: function() {
       this.model.toggle();
